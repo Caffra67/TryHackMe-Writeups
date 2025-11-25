@@ -1,7 +1,7 @@
 ## Lookup
 
 ### Add host to /etc/hosts
-
+<img width="646" height="313" alt="image" src="https://github.com/user-attachments/assets/4ad31f30-1fbc-443c-90aa-468e55ddf4eb" />
 
 ### Nmap
 
