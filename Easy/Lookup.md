@@ -1,9 +1,9 @@
-### Lookup
+## Lookup
 
-## Add host to /etc/hosts
+### Add host to /etc/hosts
 
 
-## Nmap
+### Nmap
 
 ```
 [ Oguri ~ ]$ nmap -sC -sV 10.80.183.237
