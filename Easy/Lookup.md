@@ -75,7 +75,7 @@ http://lookup.thm [200 OK] Apache[2.4.41], Country[RESERVED][ZZ], HTML5, HTTPSer
 Nothing intresting
 
 ## Brute-Force
-At website first thing we can so is login page soo we can try use it
+The first thing visible on the website is a login page, which makes it a good target for initial testing.
 <img width="2218" height="571" alt="image" src="https://github.com/user-attachments/assets/806a59be-607f-4e33-9e38-288113886e7e" />
 
 ### FFUF:
@@ -150,7 +150,7 @@ We can see website redirect to **http://files.lookup.thm** so its good idea to *
 and like that we got it 
 <img width="2254" height="373" alt="image" src="https://github.com/user-attachments/assets/4e0cfb97-959b-4677-a946-24325cb71ce5" />
 
-We can se this is outdated librarie
+We can see this is outdated librarie
 https://nvd.nist.gov/vuln/detail/CVE-2019-9194
 <img width="1365" height="437" alt="image" src="https://github.com/user-attachments/assets/5d3ef046-620d-4465-9ed8-50b7cee1fa07" />
 
