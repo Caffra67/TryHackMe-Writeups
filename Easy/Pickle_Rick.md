@@ -72,9 +72,20 @@ There is 3 interesting places to check
 
    
 http://10.81.162.185/robots.txt
+
 the is only 1 word -> **Wubbalubbadubdub**
 
 http://10.81.162.185/login.php
+
 Just a login page
 
+### First Flag
+When i was looking at Request i found comment with user 
+<img width="1871" height="557" alt="image" src="https://github.com/user-attachments/assets/f1962e1a-91ac-44bb-ae93-d6b6ab2f74e4" />
 
+So we can try to login in this credencials we got
+Login: R1ckRul3s
+Passowrd: Wubbalubbadubdub
+
+And there is a panel 
+<img width="2099" height="955" alt="image" src="https://github.com/user-attachments/assets/116e7de5-bab7-4fe4-b175-c16852d8c035" />
