@@ -49,9 +49,11 @@ by Ben "epi" Risher 🤓                 ver: 2.13.1
 301      GET        9l       28w      314c http://10.80.159.121/panel => http://10.80.159.121/panel/
 ```
 At http://10.80.159.121/panel i find a place to upload files 
+
 <img width="250" height="300" alt="image" src="https://github.com/user-attachments/assets/0e49da1b-37a1-41b1-9f0a-3cdf603abe58" />
 
 and at http://10.80.145.92/uploads/ i can see where files ends
+
 <img width="300" height="250" alt="image" src="https://github.com/user-attachments/assets/cecb5ce4-43c1-48ad-8bfa-9fa32b5cf8e7" />
 
 ### Getting shell
@@ -63,6 +65,7 @@ I tried upload basic RCE with .php extension but site block it
 But if i change .php to .php5 site aprove 
 
 <img width="300" height="300" alt="image" src="https://github.com/user-attachments/assets/4150b229-60d4-4846-9919-b5b2cb73873f" />
+
 
 <img width="300" height="250" alt="image" src="https://github.com/user-attachments/assets/fae1f65d-950b-4af0-baed-371227bebb5d" />
 
