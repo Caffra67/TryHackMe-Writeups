@@ -54,3 +54,16 @@ At http://10.80.159.121/panel i find a place to upload files
 and at http://10.80.145.92/uploads/ i can see where files ends
 <img width="776" height="402" alt="image" src="https://github.com/user-attachments/assets/cecb5ce4-43c1-48ad-8bfa-9fa32b5cf8e7" />
 
+### Getting shell
+
+I tried upload basic RCE with .php extension but site block it 
+
+<img width="862" height="1224" alt="image" src="https://github.com/user-attachments/assets/dee235f1-29a5-4a28-84fc-2a61aee90c5f" />
+
+But if i change .php to .php5 site aprove 
+
+<img width="1228" height="1223" alt="image" src="https://github.com/user-attachments/assets/4150b229-60d4-4846-9919-b5b2cb73873f" />
+
+<img width="876" height="386" alt="image" src="https://github.com/user-attachments/assets/fae1f65d-950b-4af0-baed-371227bebb5d" />
+
+
