@@ -66,6 +66,7 @@ But if i change .php to .php5 site aprove
 
 <img width="300" height="300" alt="image" src="https://github.com/user-attachments/assets/4150b229-60d4-4846-9919-b5b2cb73873f" />
 
+And like that we can see web is vulnerable to RCE
 
 <img width="300" height="250" alt="image" src="https://github.com/user-attachments/assets/fae1f65d-950b-4af0-baed-371227bebb5d" />
 
