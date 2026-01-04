@@ -58,7 +58,7 @@ and at http://10.80.145.92/uploads/ i can see where files ends
 
 I tried upload basic RCE with .php extension but site block it 
 
-<img width="250" height="250" alt="image" src="https://github.com/user-attachments/assets/dee235f1-29a5-4a28-84fc-2a61aee90c5f" />
+<img width="250" height="300" alt="image" src="https://github.com/user-attachments/assets/dee235f1-29a5-4a28-84fc-2a61aee90c5f" />
 
 But if i change .php to .php5 site aprove 
 
