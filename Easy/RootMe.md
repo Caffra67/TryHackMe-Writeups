@@ -56,6 +56,8 @@ and at http://10.80.145.92/uploads/ i can see where files ends
 
 <img width="300" height="250" alt="image" src="https://github.com/user-attachments/assets/cecb5ce4-43c1-48ad-8bfa-9fa32b5cf8e7" />
 
+---
+
 ### Getting shell
 
 I tried upload basic RCE with .php extension but site block it 
