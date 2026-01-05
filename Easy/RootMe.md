@@ -70,4 +70,11 @@ And like that we can see web is vulnerable to RCE
 
 <img width="300" height="250" alt="image" src="https://github.com/user-attachments/assets/fae1f65d-950b-4af0-baed-371227bebb5d" />
 
+Ok now its time to exploit it, at first set a netcat for listening
+```
+[ Oguri ~/Desktop ]$ nc -lvnp 4444
+Listening on 0.0.0.0 4444
+```
+
+
 
