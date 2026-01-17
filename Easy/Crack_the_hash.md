@@ -36,7 +36,7 @@ Hash -> $2y$12$Dwt1BZj6pcyc3Dy1FWZ5ieeUznr71EeNkJkUlypTsgbX1H68wsRom
 Hash type ->  bcrypt (https://hashcat.net/wiki/doku.php?id=example_hashes)
 
 ```
-hashcat -m 3200 hash4.txt /mnt/c/Users/Goldship/Desktop/Hash/rockyou.txt
+hashcat -m 3200 hash4.txt /../rockyou.txt
 ```
 ### Hash 5
 
@@ -77,7 +77,7 @@ Hash -> $6$aReallyHardSalt$6WKUTqzq.UQQmrm0p/T7MPpMbGNnzXPMAXi4bJMl9be.cfi3/qxIf
 Hash type -> SHA-512
 
 ```
-./john --format=raw-md5 --wordlist=/../rockyou.txt hash1.txt
+hashcat -m 1800 hash3.txt /../rockyou.txt
 ```
 
 ### Hash 4
@@ -93,7 +93,7 @@ e5d8870e5bdd26602cab8dbe07a942c8669e56d6:tryhackme
 ```
 
 ```
-hashcat -m 110 hash4.txt /mnt/c/Users/Goldship/Desktop/Hash/rockyou.txt
+hashcat -m 110 hash4.txt /../rockyou.txt
 ```
 
 
