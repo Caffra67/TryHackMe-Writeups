@@ -46,8 +46,6 @@ Hash type -> MD4
 
 i used **https://crackstation.net/**
 
----
-
 ## Level 2 
 
 ### Hash 1
