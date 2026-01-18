@@ -1,4 +1,4 @@
-<img width="516" height="489" alt="image" src="https://github.com/user-attachments/assets/44ab4ccb-3bd5-4e24-a00f-f8ad36755024" /># Lookup
+# Lookup
 
 ## Task 6 Challange 
 
