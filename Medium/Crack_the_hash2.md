@@ -8,6 +8,21 @@ Hash -> b16f211a8ad7f97778e5006c7cecdf31
 
 Tip -> English male name, MD5, Border mutation, custom rule
 
+```
+./wordlistctl.py search malename
+--==[ wordlistctl by blackarch.org ]==--
+
+    0 > femalenames-usa-top1000 (6.94 Kb)
+    1 > malenames-usa-top1000 (6.68 Kb)
+    2 > Malename (29.67 Kb)
+    3 > maleNames-password (22.54 Kb)
+    4 > top_1000_usa_femalenames_english (6.78 Kb)
+    5 > top_1000_usa_malenames_english (6.52 Kb)
+
+sudo ./wordlistctl.py fetch malename -d
+
+./john --format=raw-md5 --wordlist=/../top_1000_usa_malenames_english.txt hash1.txt --rule=ALL
+```
 
 
 ### Hash 7
