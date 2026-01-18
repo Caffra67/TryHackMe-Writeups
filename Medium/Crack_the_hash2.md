@@ -39,7 +39,42 @@ sudo ./wordlistctl.py fetch femalenames -d
 
 ./john --format=raw-md5 --wordlist=/../top_1000_usa_femalenames_english.txt hash2.txt --rule=ALL --fork=24
 ```
-### Hash 8
+### Hash 3
+
+Hash -> f4476669333651be5b37ec6d81ef526f
+
+Tip -> Town name of Mexico, MD5, Freak mutation, mentalist tool
+
+```
+
+```
+### Hash 4
+
+Hash -> a3a321e1c246c773177363200a6c0466a5030afc
+
+Tip -> Own name, SHA1, Case mutation; existing rule
+
+```
+
+```
+### Hash 5
+
+Hash -> d5e085772469d544a447bc8250890949
+
+Tip -> Lyrics, MD5, Order mutation, lyricpass
+
+```
+
+```
+### Hash 6
+
+Hash -> 377081d69d23759c5946a95d1b757adc
+
+Tip -> Phone number, MD5, No mutation, pnwgen
+
+```
+
+```
 
 ### Hash 7
 
