@@ -62,8 +62,42 @@ Hash -> a3a321e1c246c773177363200a6c0466a5030afc
 
 Tip -> Own name, SHA1, Case mutation; existing rule
 
+<img width="1007" height="574" alt="image" src="https://github.com/user-attachments/assets/38e5c543-edfa-459e-9d59-ee4e5cc1fbe0" />
+
+With this one, we know that the user uses their name, so I prepared a small file called test.txt where I wrote all possible variations.
+
+```
+David
+DavidGuettapan
+David Guettapan
+Guettapan
 ```
 
+I wrote a quick Python script to randomly change letter casing.
+
+```
+import random
+
+def random_case(word):
+    return "".join(
+        c.upper() if c.isalpha() and random.choice([True, False]) else c.lower()
+        for c in word
+    )
+
+
+N = 100
+
+with open("test.txt", encoding="utf-8") as fin, \
+     open("output.txt", "w", encoding="utf-8") as fout:
+
+    for line in fin:
+        word = line.strip()
+        for _ in range(N):
+            fout.write(random_case(word) + "\n")
+```
+
+```
+./john --format=raw-sha1 --wordlist=/../output.txt hash4.txt --rule=ALL
 ```
 ### Hash 5
 
