@@ -21,12 +21,25 @@ Tip -> English male name, MD5, Border mutation, custom rule
     5 > top_1000_usa_malenames_english (6.52 Kb)
 
 # Unpack wordlist 
-sudo ./wordlistctl.py fetch malename -d
+sudo ./wordlistctl.py fetch malenames -d
 
 # Decode hash
 ./john --format=raw-md5 --wordlist=/../top_1000_usa_malenames_english.txt hash1.txt --rule=ALL
 ```
+### Hash 2
 
+Hash -> 7463fcb720de92803d179e7f83070f97
+
+Tip -> English female name, MD5, Border mutation, custom rule
+
+```
+# Unpack wordlist 
+sudo ./wordlistctl.py fetch femalenames -d
+
+
+./john --format=raw-md5 --wordlist=/../top_1000_usa_femalenames_english.txt hash2.txt --rule=ALL --fork=24
+```
+### Hash 8
 
 ### Hash 7
 
