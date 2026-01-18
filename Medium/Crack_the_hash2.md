@@ -1,4 +1,4 @@
-<img width="734" height="335" alt="image" src="https://github.com/user-attachments/assets/4cb2c4a3-b429-4f22-bb81-e310d08ad149" /># Lookup
+# Lookup
 
 ## Task 6 Challange 
 
@@ -51,6 +51,7 @@ This one was a pain. I found a website with a list of all Mexican counties and d
 Later, I used Mentalist to apply a freak/1337 mutation.
 
 <img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7f17c48e-bbe5-4f51-a2ea-8910bc4ca1dc" />
+
 
 ```
 ./john --format=raw-md5 --wordlist=/../XDt.txt hash3.txt --rule=ALL
