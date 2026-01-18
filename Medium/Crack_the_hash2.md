@@ -1,4 +1,4 @@
-# Lookup
+<img width="516" height="489" alt="image" src="https://github.com/user-attachments/assets/44ab4ccb-3bd5-4e24-a00f-f8ad36755024" /># Lookup
 
 ## Task 6 Challange 
 
@@ -105,8 +105,10 @@ Hash -> d5e085772469d544a447bc8250890949
 
 Tip -> Lyrics, MD5, Order mutation, lyricpass
 
-```
+Ok, this is problematic. The official hint mentions lyricpass, but there’s an issue: the code is outdated. I tried to rewrite it, but in the original code it fetches data from https://www.lyrics.com/. Now, however, they have implemented an AWS WAF cookie, and without it, I can’t get a response.
 
+```
+flag: uoy ot miws ot em rof peed oot ro ediw oot si revir oN
 ```
 ### Hash 6
 
@@ -114,8 +116,17 @@ Hash -> 377081d69d23759c5946a95d1b757adc
 
 Tip -> Phone number, MD5, No mutation, pnwgen
 
-```
+<img width="516" height="489" alt="image" src="https://github.com/user-attachments/assets/344e0192-f1be-46bd-9a31-2f4f21ef72aa" />
 
+we know that user have number from Sint Maarten 
+
+https://en.wikipedia.org/wiki/List_of_telephone_country_codes
+
+```
+# with this tool we can create wordlist for numbers
+python3 ./pnwgen.py +1721 '' 7
+
+./john --format=raw-md5 --wordlist=/../wordlist.txt hash6.txt --rule=ALL
 ```
 
 ### Hash 7
