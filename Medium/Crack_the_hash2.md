@@ -47,8 +47,10 @@ Tip -> Town name of Mexico, MD5, Freak mutation, mentalist tool
 
 <img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/5c5abb73-a4ca-4313-b829-a9a639f9e970" />
 
-<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7f17c48e-bbe5-4f51-a2ea-8910bc4ca1dc" />
+This one was a pain. I found a website with a list of all Mexican counties and downloaded it because I couldn’t find anything useful in wordlistctl.
+Later, I used Mentalist to apply a freak/1337 mutation.
 
+<img width="500" height="250" alt="image" src="https://github.com/user-attachments/assets/7f17c48e-bbe5-4f51-a2ea-8910bc4ca1dc" />
 
 ```
 ./john --format=raw-md5 --wordlist=/../XDt.txt hash3.txt --rule=ALL
