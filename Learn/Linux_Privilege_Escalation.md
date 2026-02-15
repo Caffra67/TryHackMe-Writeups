@@ -52,3 +52,5 @@ In this exercise, we are looking for a specific file name. The best way to find 
 # cat /home/matt/flag1.txt
 THM-X
 ```
+
+# Privilege Escalation: Sudo
